@@ -1,0 +1,60 @@
+# <><><><><><><><><><><><>
+# <> Data Preprocessing <>
+# <><><><><><><><><><><><>
+
+# =============================
+# == Importing the libraries ==
+# =============================
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# ============================
+# == Importing the datasets ==
+# ============================
+dataset = pd.read_csv('Data.csv')
+print('Dataset:\n', dataset)
+print('\n')
+
+# ========================================
+# == Creating the Matrix of Features    ==
+# == Create independent variable vector ==
+# ========================================
+X = dataset.iloc[ :, :-1 ].values
+print('X:\n', X)
+print('\n')
+# Create dependent variable vector
+Y = dataset.iloc[ :, 3 ].values
+print('Y:\n', Y)
+print('\n')
+
+# =================================
+# == Taking care of missing data ==
+# =================================
+from sklearn.impute import SimpleImputer
+print('X[:, 1:3]:\n', X[:, 1:3])
+print('\n')
+# initiating SimpleImputer class and setting presets
+imp_mean = SimpleImputer(missing_values=np.nan, strategy='mean')
+# taking indexes 1 and 2 from X because these are the only columns we need to clean
+# index 3 is excluded
+# .fit() definition:
+# Fitting a model means that you're making your algorithm learn the relationship between predictors and outcome so that you can predict the future values of the outcome.
+# So the best fitted model has a specific set of parameters which best defines the problem at hand.
+imp_mean.fit(X[:, 1:3])
+# .transform() api will modify all values defined in the imputer class presets and based on the trained imputer model,
+# the data passed into the method will be adjusted accordingly and passed back into their respective positions within the select dataset
+X[:, 1:3] = imp_mean.transform(X[:, 1:3])
+print('postprocessing X:\n', X)
+
+# =================================
+# == Encoding Categorical Values ==
+# =================================
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+# This works but... when you input this data with the categorical values translated to values,
+# the algorithm will think 'the higher the value, the more valuable it is' but since this data is just
+# categorical data, this should not be the case. Because based on the translated data, France is 0, Spain is 2 and Germany is 1
+# The algorithm will think Spain is 'higher' than France and vice versa for the others. We don't need to do this.
+labelencoder_X = LabelEncoder()
+X[:,0] = labelencoder_X.fit_transform(X[:, 0])
+print('labelencoder X:\n', X)
