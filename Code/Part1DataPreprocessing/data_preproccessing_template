@@ -58,3 +58,7 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 labelencoder_X = LabelEncoder()
 X[:,0] = labelencoder_X.fit_transform(X[:, 0])
 print('labelencoder X:\n', X)
+# To remedy encoding categorical values, use the OneHotEncoder object within sklearn.preprocessing library
+onehotencoder = OneHotEncoder(ColumnTransformer=[0])
+onehotencoder.fit(X)
+
