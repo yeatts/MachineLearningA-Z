@@ -50,7 +50,9 @@ print('postprocessing X:\n', X)
 # =================================
 # == Encoding Categorical Values ==
 # =================================
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+from sklearn.preprocessing import LabelEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import Normalizer
 # This works but... when you input this data with the categorical values translated to values,
 # the algorithm will think 'the higher the value, the more valuable it is' but since this data is just
 # categorical data, this should not be the case. Because based on the translated data, France is 0, Spain is 2 and Germany is 1
@@ -58,7 +60,7 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 labelencoder_X = LabelEncoder()
 X[:,0] = labelencoder_X.fit_transform(X[:, 0])
 print('labelencoder X:\n', X)
-# To remedy encoding categorical values, use the OneHotEncoder object within sklearn.preprocessing library
-onehotencoder = OneHotEncoder(ColumnTransformer=[0])
-onehotencoder.fit(X)
-
+# To remedy encoding categorical values, use the ColumnTransformer object within sklearn.column library
+columnTransformer = ColumnTransformer("norm1", Normalizer(norm='l1'), [0])
+columnTransformer.fit(X, y=None)
+print('columntransformer X:\n', columnTransformer)
